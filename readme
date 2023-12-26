@@ -11,3 +11,7 @@ python -m venv env
 source env/Scripts/activate
 
 python compression.py
+
+pip freeze > requirnments.txt
+
+pip install -r requirements.txt

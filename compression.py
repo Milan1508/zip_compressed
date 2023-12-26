@@ -19,6 +19,15 @@ def append_resized_to_filename(image_path):
     return new_image_path.replace("\\", "/")
 
 
+def process_image(image_path):
+    # Get the new image path
+    output_path = append_resized_to_filename(image_path)
+    # Resize the image
+    width = 640
+    height = 400
+    resize_image(image_path, output_path, width, height)
+
+
 def append_resized_to_foldername(folder_path):
     # Get the folder name from the folder path
     folder_name = os.path.basename(folder_path)
@@ -70,12 +79,24 @@ def main():
         # Open the file dialog with a filter for .jpg files and get the selected file path
         directory_path = filedialog.askdirectory()
         print(directory_path)
-
+        cycle_through_files(directory_path)
+        
     else:
         # Open the directory dialog and get the selected directory path
         file_path = filedialog.askopenfilename(
             filetypes=[("JPEG files", "*.jpg")])
         print(file_path)
+        process_image(file_path)
+
+
+def cycle_through_files(directory_path):
+    for root, dirs, files in os.walk(directory_path):
+        for file in files:
+            if file.endswith(".jpg"):
+                file_path = os.path.join(root, file)
+                print(file_path)
+                process_image(file_path)
+
 
 
 if __name__ == "__main__":
