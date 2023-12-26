@@ -4,3 +4,10 @@ and select the folders and all the folders having images, there images will comp
 
 
 
+C:\Users\milan\AppData\Local\Programs\Python\Python312
+
+python -m venv env
+
+source env/Scripts/activate
+
+python compression.py
