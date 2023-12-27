@@ -78,7 +78,7 @@ def main():
             # Open the directory dialog and get the selected directory path
             file_path = filedialog.askopenfilenames(
                 filetypes=[("JPEG files", "*.jpg"), ("PNG files", "*.png"), ("JPEG files", "*.jpeg")])
-            print(file_path)
+            # print(file_path)
 
             print("""Please wait while its resizing the images...""")
             for names in file_path:

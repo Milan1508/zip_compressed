@@ -18,3 +18,5 @@ python compression.py
 pip freeze > requirements.txt
 
 pip install -r requirements.txt
+
+pyinstaller --onefile --icon=M:/Projects/zip_compress/OIP.ico compression.py
