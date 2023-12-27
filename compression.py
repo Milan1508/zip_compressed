@@ -6,14 +6,6 @@ from tkinter import messagebox
 import json
 
 
-def read_config_file(file_path):
-    with open(file_path, 'r') as file:
-        config_data = json.load(file)
-    return config_data
-
-
-config_path = 'config.json'
-config_data = read_config_file(config_path)
 
 
 def append_resized_to_filename(image_path):
@@ -34,8 +26,8 @@ def process_image(image_path, output_path):
     # print(image_path)
 
     # Resize the image
-    width = config_data['width']
-    height = config_data['height']
+    width = 640
+    height = 480
     resize_image(image_path, output_path, width, height)
 
 
