@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter.ttk import Treeview
 from tkinter import filedialog
 from PIL import Image
 import os
@@ -7,16 +8,14 @@ import json
 
 
 def valiadate_file_count(directory_path):
-    
     dir_count = []
     for root, dirs, files in os.walk(directory_path):
         count_images = 0
         for file in files:
             if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
                 count_images += 1
-        dir_count.append((root,count_images))
+        dir_count.append((root, count_images))
     return dir_count
-
 
 
 def append_resized_to_filename(image_path):
@@ -51,6 +50,7 @@ def resize_image(image_path, output_path, width, height):
     resized_image = image.resize((width, height))
     resized_image.save(output_path)
 
+
 """
 def main():
     root = tk.Tk()
@@ -78,9 +78,38 @@ def main():
             process_image(names, output_path)
 
 """
+
+
 def main():
     # cycle_through_files("sample")
-    print(valiadate_file_count("M:/Projects/Milan Photo - Copy/2023.12.15"))
+    directory_info_original = valiadate_file_count(
+        "M:/Projects/Milan Photo - Copy/2023.12.15")
+    directory_info_resized = valiadate_file_count(
+        "M:/Projects/Milan Photo - Copy/2023.12.15_resized")
+    root = tk.Tk()
+
+    # Create a Treeview widget
+    tree = Treeview(root)
+
+    # Define the columns
+    tree["columns"] = ("one", "two")
+
+    # Format the columns
+    tree.column("#0", width=270, minwidth=270, stretch=False)
+    tree.column("one", width=150, minwidth=150, stretch=False)
+
+    # Define the column headings
+    tree.heading("#0", text="Directory Path", anchor='w')
+
+    tree.heading("one", text="File Count", anchor='w')
+
+    # Add the directory info to the Treeview
+    for info in directory_info_original:
+        tree.insert("", "end", text=info[0], values=(info[1]))
+
+    tree.pack()
+    root.mainloop()
+
 
 def new_directory_root(directory_path):
     out_last_name_original = os.path.basename(
