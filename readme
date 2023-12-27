@@ -12,6 +12,6 @@ source env/Scripts/activate
 
 python compression.py
 
-pip freeze > requirnments.txt
+pip freeze > requirements.txt
 
 pip install -r requirements.txt
