@@ -5,6 +5,7 @@ from PIL import Image
 import os
 from tkinter import messagebox
 import json
+import sys
 
 
 def valiadate_file_count(directory_path):
@@ -51,63 +52,98 @@ def resize_image(image_path, output_path, width, height):
     resized_image.save(output_path)
 
 
-"""
 def main():
-    root = tk.Tk()
-    root.withdraw()  # Hide the main window
+    try:
 
-    # Ask the user if they want to select a file or a directory
-    MsgBox = messagebox.askquestion(
-        'File or Directory', 'Select "Yes" for directory and "NO" for choosing jpg file', icon='question')
+        root = tk.Tk()
+        root.withdraw()  # Hide the main window
 
-    if MsgBox == 'yes':
-        # Open the file dialog with a filter for .jpg files and get the selected file path
-        directory_path = filedialog.askdirectory()
-        # print(directory_path)
-        cycle_through_files(directory_path)
+        # Ask the user if they want to select a file or a directory
+        MsgBox = messagebox.askquestion(
+            'File or Directory', 'Select "Yes" for directory and "NO" for choosing jpg file', icon='question')
 
-    else:
-        # Open the directory dialog and get the selected directory path
-        file_path = filedialog.askopenfilenames(
-            filetypes=[("JPEG files", "*.jpg"), ("PNG files", "*.png"), ("JPEG files", "*.jpeg")])
-        print(file_path)
+        if MsgBox == 'yes':
+            # Open the file dialog with a filter for .jpg files and get the selected file path
+            directory_path = filedialog.askdirectory()
+            # print(directory_path)
+            print("""Please wait while its resizing the images...""")
+            if cycle_through_files(directory_path):
+                const_tuple = new_directory_root(directory_path)
+                replaced_directory_path = replace_with_new_directory(
+                    directory_path, const_tuple)
+                print("""Resizing completed""")
+                check_window(directory_path, replaced_directory_path)
 
-        for names in file_path:
-            output_path = append_resized_to_filename(names)
-            # print(output_path)
-            process_image(names, output_path)
+        else:
+            # Open the directory dialog and get the selected directory path
+            file_path = filedialog.askopenfilenames(
+                filetypes=[("JPEG files", "*.jpg"), ("PNG files", "*.png"), ("JPEG files", "*.jpeg")])
+            print(file_path)
 
-"""
+            print("""Please wait while its resizing the images...""")
+            for names in file_path:
+                output_path = append_resized_to_filename(names)
+                # print(output_path)
+                process_image(names, output_path)
+
+            print("""Resizing completed""")
+            sys.exit()
+    except Exception as e:
+        print(e)
 
 
-def main():
-    # cycle_through_files("sample")
-    directory_info_original = valiadate_file_count(
-        "M:/Projects/Milan Photo - Copy/2023.12.15")
-    directory_info_resized = valiadate_file_count(
-        "M:/Projects/Milan Photo - Copy/2023.12.15_resized")
-    root = tk.Tk()
-
+def create_tree(parent, directory_info, column_title):
     # Create a Treeview widget
-    tree = Treeview(root)
+    tree = Treeview(parent)
 
     # Define the columns
-    tree["columns"] = ("one", "two")
+    tree["columns"] = ("one")
+
+    max_length_0 = max(len(info[0]) for info in directory_info)
+    max_length_1 = max(len(str(info[1])) for info in directory_info)
 
     # Format the columns
-    tree.column("#0", width=270, minwidth=270, stretch=False)
-    tree.column("one", width=150, minwidth=150, stretch=False)
+    tree.column("#0", width=max_length_0*6, minwidth=270, stretch=False)
+    tree.column("one", width=max_length_1*100, minwidth=270,
+                stretch=False, anchor='center')
 
     # Define the column headings
     tree.heading("#0", text="Directory Path", anchor='w')
-
-    tree.heading("one", text="File Count", anchor='w')
+    tree.heading("one", text=column_title, anchor='center')
 
     # Add the directory info to the Treeview
-    for info in directory_info_original:
-        tree.insert("", "end", text=info[0], values=(info[1]))
+    for info in directory_info:
+        tree.insert("", "end", text=info[0], values=(
+            info[1]))
 
-    tree.pack()
+    return tree
+
+
+def check_window(original_path, resized_path):
+    directory_info = valiadate_file_count(
+        original_path)
+    directory_info_resized = valiadate_file_count(
+        resized_path)
+
+    root = tk.Tk()
+
+    tree1 = create_tree(root, directory_info, "File Count")
+    tree1.grid(row=0, column=0)
+
+    tree2 = create_tree(root, directory_info_resized, "Resized File Count")
+    tree2.grid(row=0, column=1)
+
+    # Configure the grid to expand with the window
+    root.grid_columnconfigure(0, weight=1)
+    root.grid_columnconfigure(1, weight=1)
+    root.grid_rowconfigure(0, weight=1)
+
+    def on_closing():
+        root.destroy()
+        sys.exit()
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
     root.mainloop()
 
 
@@ -140,7 +176,6 @@ def cycle_through_files(directory_path):
         # print("new root ",replace_with_new_directory(root, const_tuple))
         new_root = replace_with_new_directory(root, const_tuple)
         make_directory(new_root)
-        count_directories += 1
 
         for file in files:
             if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
@@ -149,9 +184,8 @@ def cycle_through_files(directory_path):
                 output_file_path = replace_with_new_directory(
                     file_path, const_tuple)
                 process_image(file_path, output_file_path)
-                count_images += 1
 
-    return (count_directories, count_images)
+    return True
 
 
 if __name__ == "__main__":
