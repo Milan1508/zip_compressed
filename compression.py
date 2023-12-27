@@ -52,11 +52,17 @@ def resize_image(image_path, output_path, width, height):
     resized_image.save(output_path)
 
 
+def bring_to_front(window):
+    window.attributes('-topmost', 1)
+    window.after_idle(window.attributes, '-topmost', 0)
+
+
 def main():
     try:
 
         root = tk.Tk()
-        root.withdraw()  # Hide the main window
+        bring_to_front(root)
+        root.withdraw()
 
         # Ask the user if they want to select a file or a directory
         MsgBox = messagebox.askquestion(
@@ -73,6 +79,7 @@ def main():
                     directory_path, const_tuple)
                 print("""Resizing completed""")
                 check_window(directory_path, replaced_directory_path)
+                sys.exit()
 
         else:
             # Open the directory dialog and get the selected directory path
