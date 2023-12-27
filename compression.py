@@ -6,6 +6,19 @@ from tkinter import messagebox
 import json
 
 
+def valiadate_file_count(directory_path):
+    
+    dir_count = []
+    for root, dirs, files in os.walk(directory_path):
+        count_images = 0
+        for file in files:
+            if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
+                count_images += 1
+        dir_count.append((root,count_images))
+    return dir_count
+
+
+
 def append_resized_to_filename(image_path):
     # Split the file path into directory, filename, and extension
     directory, filename = os.path.split(image_path)
@@ -38,7 +51,7 @@ def resize_image(image_path, output_path, width, height):
     resized_image = image.resize((width, height))
     resized_image.save(output_path)
 
-
+"""
 def main():
     root = tk.Tk()
     root.withdraw()  # Hide the main window
@@ -64,13 +77,14 @@ def main():
             # print(output_path)
             process_image(names, output_path)
 
-
-# def main():
-#     cycle_through_files("sample")
+"""
+def main():
+    # cycle_through_files("sample")
+    print(valiadate_file_count("M:/Projects/Milan Photo - Copy/2023.12.15"))
 
 def new_directory_root(directory_path):
     out_last_name_original = os.path.basename(
-        directory_path)    
+        directory_path)
     # print(out_last_name)
     out_last_name = out_last_name_original + "_resized"
     # print(out_last_name)
@@ -79,10 +93,7 @@ def new_directory_root(directory_path):
 
 def replace_with_new_directory(directory_path, tuple):
     out_last_name_original, out_last_name = tuple
-    # print(out_last_name_original)
-    # print(out_last_name)
-    # print(directory_path)
-    # print(directory_path.replace(out_last_name_original, out_last_name))
+
     return fix_slash(directory_path.replace(out_last_name_original, out_last_name))
 
 
@@ -92,8 +103,7 @@ def fix_slash(path):
 
 def cycle_through_files(directory_path):
     # print("directory path ",directory_path)
-    count_images = 0
-    count_directories = 0
+
     const_tuple = new_directory_root(directory_path)
 
     for root, dirs, files in os.walk(directory_path):
