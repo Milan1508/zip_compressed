@@ -6,8 +6,6 @@ from tkinter import messagebox
 import json
 
 
-
-
 def append_resized_to_filename(image_path):
     # Split the file path into directory, filename, and extension
     directory, filename = os.path.split(image_path)
@@ -57,12 +55,14 @@ def main():
 
     else:
         # Open the directory dialog and get the selected directory path
-        file_path = filedialog.askopenfilename(
-            filetypes=[("JPEG files", "*.jpg")])
-        # print(file_path)
-        # Get the new image path
-        output_path = append_resized_to_filename(file_path)
-        process_image(file_path, output_path)
+        file_path = filedialog.askopenfilenames(
+            filetypes=[("JPEG files", "*.jpg"), ("PNG files", "*.png"), ("JPEG files", "*.jpeg")])
+        print(file_path)
+
+        for names in file_path:
+            output_path = append_resized_to_filename(names)
+            # print(output_path)
+            process_image(names, output_path)
 
 
 # def main():
@@ -70,7 +70,7 @@ def main():
 
 def new_directory_root(directory_path):
     out_last_name_original = os.path.basename(
-        directory_path)    # root.split("/")[-1]
+        directory_path)    
     # print(out_last_name)
     out_last_name = out_last_name_original + "_resized"
     # print(out_last_name)
@@ -92,6 +92,8 @@ def fix_slash(path):
 
 def cycle_through_files(directory_path):
     # print("directory path ",directory_path)
+    count_images = 0
+    count_directories = 0
     const_tuple = new_directory_root(directory_path)
 
     for root, dirs, files in os.walk(directory_path):
@@ -99,14 +101,18 @@ def cycle_through_files(directory_path):
         # print("new root ",replace_with_new_directory(root, const_tuple))
         new_root = replace_with_new_directory(root, const_tuple)
         make_directory(new_root)
+        count_directories += 1
 
         for file in files:
-            if file.endswith(".jpg"):
+            if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
                 file_path = os.path.join(root, file)
                 # print("file path ",replace_with_new_directory(file_path, const_tuple))
                 output_file_path = replace_with_new_directory(
                     file_path, const_tuple)
                 process_image(file_path, output_file_path)
+                count_images += 1
+
+    return (count_directories, count_images)
 
 
 if __name__ == "__main__":
