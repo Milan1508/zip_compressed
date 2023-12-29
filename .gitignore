@@ -5,3 +5,4 @@ env
 sample
 sample_resized
 back.py
+dist/compression.exe

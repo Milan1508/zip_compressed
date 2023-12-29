@@ -6,6 +6,7 @@ import os
 from tkinter import messagebox
 import json
 import sys
+# import shutil
 
 
 def valiadate_file_count(directory_path):
@@ -185,12 +186,24 @@ def cycle_through_files(directory_path):
         make_directory(new_root)
 
         for file in files:
-            if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
-                file_path = os.path.join(root, file)
-                # print("file path ",replace_with_new_directory(file_path, const_tuple))
-                output_file_path = replace_with_new_directory(
-                    file_path, const_tuple)
+
+            file_path = os.path.join(root, file)
+
+            output_file_path = replace_with_new_directory(
+                file_path, const_tuple)
+
+            file_size = os.path.getsize(file_path)
+            file_size = round(file_size/1024, 0)
+
+            if (file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png")) and file_size > 60.0:
+
+                # print("file_size : ", file_size)
                 process_image(file_path, output_file_path)
+
+            else:
+
+                # shutil.copy(file_path, output_file_path)
+                pass
 
     return True
 
