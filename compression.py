@@ -6,7 +6,7 @@ import os
 from tkinter import messagebox
 import json
 import sys
-# import shutil
+from shutil import copy
 
 
 def valiadate_file_count(directory_path):
@@ -181,7 +181,7 @@ def cycle_through_files(directory_path):
 
     for root, dirs, files in os.walk(directory_path):
 
-        # print("new root ",replace_with_new_directory(root, const_tuple))
+        
         new_root = replace_with_new_directory(root, const_tuple)
         make_directory(new_root)
 
@@ -202,8 +202,8 @@ def cycle_through_files(directory_path):
 
             else:
 
-                # shutil.copy(file_path, output_file_path)
-                pass
+                copy(file_path, output_file_path)
+                print("copying ", file)
 
     return True
 
